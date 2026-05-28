@@ -1,9 +1,30 @@
 str = "许多"
-stl = str.encode('utf-8')
-print(stl)
-stl2 = stl.decode('utf-8')
-print(stl2)
-#encode是将字符串转换为字节串，decode是将字节串转换为字符串
-#在Python中，字符串是以Unicode编码的，而字节串是以特定编码（如UTF-8）表示的二进制数据。
-#使用encode方法可以将字符串转换为字节串，而使用decode方法可以将字节串转换回字符串。
-#在这个例子中，字符串"许多"被编码为UTF-8字节串，然后再解码回字符串。
+print("许"in str)
+#判断字符串中是否包含某个子串
+print("许"not in str)
+#判断字符串中是否不包含某个子串
+print("许" in str and "多" in str)
+#判断字符串中是否同时包含多个子串
+print("许" in str or "多" not in str)
+#判断字符串中是否至少包含一个子串
+print("许" in str and "多" not in str)
+#判断字符串中是否包含一个子串但不包含另一个子串
+print("许" in str or "多" in str)
+#判断字符串中是否包含一个子串或另一个子串
+str2 = "dommyhsu"
+i = 0
+while i < len(str2):
+    print(str2[i], end="")
+    i += 1
+li = [1, 2, 3, 4, 5]
+li.extend([6])
+li.append(7)
+print(li)
+#将12345拆解成一个列表
+li2 = list("12345")
+print(li2)
+#将字符串拆解成一个列表
+#将列表内的元素变成int类型
+li2 = [int(i) for i in li2]
+print(li2)
+
