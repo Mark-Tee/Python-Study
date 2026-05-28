@@ -1,16 +1,16 @@
-# Python
+<h1>Python</h1>
 
-## 了解python
+<h2>了解python</h2>
 
-### <span style="color:rgb(255, 146, 18)"> Python简介</span>
+<h3><span style="color:rgb(255, 146, 18)"> Python简介</span></h3>
 
-**<span style="color:rgb(144,120,249)">编程语言</span>**是用来定义计算机程序的语言，用来向计算机发出指令
+<h3><span style="color:rgb(144,120,249)">编程语言</span></h3>是用来定义计算机程序的语言，用来向计算机发出指令
 
-**<span style="color:rgb(144,120,249)">Python语言</span>**是一种<span style="color:red">面向对象</span>的<span style="color:red">解释型</span>高级编程语言
+<h3><span style="color:rgb(144,120,249)">Python语言</span></h3>是一种<span style="color:red">面向对象</span>的<span style="color:red">解释型</span>高级编程语言
 
 python是强类型的动态脚本语言
 
-### **编译型语言和解释型语言的**区别
+<h3><span style="color:rgb(144,120,249)">编译型语言和解释型语言的</span></h3><span style="color:rgb(144,120,249)">区别</span>
 
 1. 编译型语言编译后就可以在平台运行，解释型语言在运行期间才编译
 
@@ -22,7 +22,7 @@ python是强类型的动态脚本语言
 
    
 
-### 编写第一个程序
+<h3><span style="color:rgb(144,120,249)">编写第一个程序</span></h3>
 
 ```python
 print("Hello World")
