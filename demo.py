@@ -1,30 +1,19 @@
-str = "许多"
-print("许"in str)
-#判断字符串中是否包含某个子串
-print("许"not in str)
-#判断字符串中是否不包含某个子串
-print("许" in str and "多" in str)
-#判断字符串中是否同时包含多个子串
-print("许" in str or "多" not in str)
-#判断字符串中是否至少包含一个子串
-print("许" in str and "多" not in str)
-#判断字符串中是否包含一个子串但不包含另一个子串
-print("许" in str or "多" in str)
-#判断字符串中是否包含一个子串或另一个子串
-str2 = "dommyhsu"
-i = 0
-while i < len(str2):
-    print(str2[i], end="")
-    i += 1
-li = [1, 2, 3, 4, 5]
-li.extend([6])
-li.append(7)
-print(li)
-#将12345拆解成一个列表
-li2 = list("12345")
-print(li2)
-#将字符串拆解成一个列表
-#将列表内的元素变成int类型
-li2 = [int(i) for i in li2]
-print(li2)
-
+NameLi = []
+#封装get_name函数
+def get_name():
+    name = input("请输入姓名,输入q退出：\n")
+    #判断输入的姓名是否为q或Q，如果是则退出程序并输出姓名列表；如果不是，则判断输入的姓名是否已经存在于姓名列表中，如果存在则提示用户重新输入；如果不存在则将输入的姓名添加到姓名列表中，并继续调用get_name函数进行下一次输入。
+    if name =="q" or name == "Q":
+        if len(NameLi) == 0:
+            print("没有输入任何姓名！")
+        else:
+            print("输入的姓名列表为：", NameLi)
+        return None
+    elif name in NameLi or name.capitalize() in NameLi or name.lower() in NameLi or name.upper() in NameLi:
+        print(f"输入的姓名 '{name}' 已被注册，请重新输入！")
+        return get_name()
+    else:
+        NameLi.append(name)
+        return get_name()
+#调用get_name函数
+get_name()
