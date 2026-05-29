@@ -24,7 +24,7 @@
 print("Hello World")
 ```
 
-<span style="color: rgb(255, 0, 0);font-weight: bold;" >注意：</span>
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
 
 1. 输入错误：python中的符号都是要用英文模式下的
 2. 缩进错误：print要定格写，否则就报错
@@ -93,7 +93,7 @@ print(name) # 输出变量的值
 print(age)
 print(height)
 ```
-<span style="color: rgb(255, 0, 0);font-weight: bold;" >注意：</span> 
+#### <span style="color: rgb(255, 0, 0);" >注意</span> 
 1. 变量名必须以字母或下划线开头，后面可以跟字母、数字或下划线
 2. 变量名不能使用Python的保留字，如if、for、while等
 3. 变量名区分大小写，name和Name是两个不同的变量
@@ -106,8 +106,7 @@ print(name) # 输出修改后的变量值
 ``` 
 
 ### <span style="color:rgb(144,120,249)">标识符</span>
-标识符是用来命名变量、函数、类等的名称，必须遵
-守一定的命名规则：
+标识符是用来命名变量、函数、类等的名称，必须遵守一定的命名规则：
 1. 标识符必须以字母或下划线开头，后面可以跟字母、数字或下划线
 2. 标识符不能使用Python的保留字，如if、for、while等
 3. 标识符区分大小写，name和Name是两个不同的标识符
