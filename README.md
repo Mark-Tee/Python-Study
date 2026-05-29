@@ -111,6 +111,7 @@ print(name) # 输出修改后的变量值
 2. 标识符不能使用Python的保留字，如if、for、while等
 3. 标识符区分大小写，name和Name是两个不同的标识符
 4. 标识符应该具有描述性，能够清晰地表达其用途和意义
+
 ```python
 # 定义一个函数，使用标识符my_function
 def my_function():
@@ -122,3 +123,73 @@ class MyClass:
 # 定义一个变量，使用标识符my_variable
 my_variable = 42
 ```
+
+常用的命名方法（一种习惯，没有绝对性）
+1. 下划线分割法：多个单子组成的名称，使用小写字母，单词与单词之间使用下划线分开
+2. 大驼峰命名法：多个单词组成的名称，每个单词的首字母大写，其余字母小写
+3. 小驼峰命名法：第一个单词首字母小写，后面单词首字母大写，其余字母小写
+
+```python
+# 下划线分割法
+my_variable = 42
+# 大驼峰命名法
+MyClass = MyClass()
+# 小驼峰命名法
+myFunction = my_function()
+```
+
+## <span style="color:rgb(255, 146, 18)">数值类型、字符串与格式化输出</span>
+### <span style="color:rgb(144,120,249)">数值类型</span>
+Python中的数值类型主要包括整数（int）和浮点数（float）。整数是没有小数部分的数字，而浮点数是有小数部分的数字。Python还支持复数（complex）类型、布尔值（bool）类型等其他数值类型。复数由实部和虚部组成，使用j或J表示虚部。
+
+```python
+# 定义整数变量
+age = 30
+# 定义布尔变量
+is_student = True
+# 定义浮点数变量
+height = 1.75
+# 定义复数变量，2是实部，3是虚部
+complex_number1 = 2 + 3j
+complex_number2 = 1 + 4j
+print(age) # 输出整数
+print(height) # 输出浮点数
+print(complex_number1) # 输出复数
+print(complex_number1 + complex_number2) # 输出复数的加法结果3 + 7j
+print(is_student) # 输出布尔值
+``` 
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
+1. 整数和浮点数可以进行各种数学运算，如加、减、乘、除等
+2. 整数和浮点数之间的运算会得到一个浮点数
+3. 复数可以进行加、减、乘、除等运算，但需要使用复数的实部和虚部进行计算
+4. 布尔值只能取True或False，可以用于条件判断和逻辑运算，必须使用大写的True和False，否则会被当作变量名，导致错误
+5. 布尔值可以当作整型对待，True被当作1，False被当作0，可以参与数学运算
+
+检测变量类型可以使用type()函数：
+```python   
+age = 30
+height = 1.75
+print(type(age)) # 输出<class 'int'>
+print(type(height)) # 输出<class 'float'>
+``` 
+
+### <span style="color:rgb(144,120,249)">字符串</span>
+字符串是由一系列字符组成的文本数据，可以使用单引号、双引号或三引号来定义字符串。字符串支持各种操作，如连接、切片、格式化等。
+
+```python
+# 定义字符串变量
+name = "Alice"
+greeting = 'Hello, ' + name + '!' # 字符串连接
+print(greeting) # 输出Hello, Alice!
+```
+
+字符串切片可以使用索引来获取字符串的部分内容：
+
+```python   
+name = "Alice"
+print(name[0]) # 输出第一个字符A
+print(name[1:4]) # 输出从索引1到索引3的字符lice
+print(name[-1]) # 输出最后一个字符e
+```
+
+

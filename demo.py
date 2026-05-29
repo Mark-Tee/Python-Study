@@ -44,3 +44,4 @@ def SqlNameEasy ():
         print("无效选项！")
         return SqlNameEasy()
 SqlNameEasy ()    
+
