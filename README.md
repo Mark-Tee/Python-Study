@@ -937,7 +937,7 @@ for fruit in fruits:
 print(fruits.index("cherry")) # 输出0，"cherry"在列表中的索引位置
 print(fruits.count("orange")) # 输出1，"orange"在列表中出现了1次
 
-#列表排序sort()
+# 列表排序sort()
 fruits.sort() # 对列表进行升序排序
 print(fruits) # 输出['cherry', 'grape', 'orange']
 fruits.sort(reverse=True) # 对列表进行降序排序
