@@ -679,9 +679,11 @@ age = 30
 greeting = f"Hello, {name}! You are {age} years old."
 print(greeting) # 输出Hello, Alice! You are 30 years old.
 # 字符串查找
-s = "Hello, World!"
+s = "Hello,World!"
 index = s.find("World")
-print(index) # 输出7，"World"在字符串中的起始索引位置
+print(index) # 输出6，"World"在字符串中的起始索引位置
+print(s.find("o",3,4)) # 输出-1，在索引3到4之间没有找到"o"
+print(s.find("o",4,9)) # 输出4，在索引4到9之间找到"o" 
 # 字符串替换
 s = "Hello, World!"
 new_s = s.replace("World", "Python")
@@ -714,3 +716,212 @@ new_s = s.replace("Python", "Java")
 print(new_s) # 输出Hello, World!，因为"Python"在字符串中不存在，所以没有进行替换
 ```
 
+## <span style="color:rgb(255, 146, 18)">字符串的查找、判断、修改</span>
+### <span style="color:rgb(144,120,249)">字符串的查找</span>
+字符串的查找可以使用find()方法、index()方法和in运算符等来实现。find()方法返回子字符串在字符串中的起始索引位置，如果子字符串不存在，则返回-1；index()方法与find()方法类似，但如果子字符串不存在，会抛出ValueError异常；in运算符用于检查子字符串是否存在于字符串中，返回True或False。
+
+```python
+s = "Hello, World!"
+# 使用find()方法查找子字符串
+index = s.find("World")
+print(index) # 输出7，"World"在字符串中的起始索引位置
+# 使用index()方法查找子字符串
+try: # 如果"Python"在字符串中不存在，会抛出ValueError异常
+    index = s.index("Python")
+    print(index)
+except ValueError: # 捕获ValueError异常，表示子字符串不存在
+    print("子字符串不存在") # 输出子字符串不存在，"Python"在字符串中不存在
+# 使用in、not in运算符检查子字符串是否存在
+print("Hello" in s) # 输出True，"Hello"是s的子字符串
+print("Python" not in s) # 输出True，"Python"不是s的子字符串
+```
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
+1. find()方法和index()方法的区别在于当子字符串不存在时，find()方法返回-1，而index()方法会抛出ValueError异常，<i style="color: rgb(28, 122, 210);">因此在使用index()方法时需要进行异常处理</i> 
+2. in运算符用于检查子字符串是否存在于字符串中，返回True或False，可以用于条件判断中
+```python
+s = "Hello, World!"
+if "Hello" in s:
+    print("字符串中包含Hello") # 输出字符串中包含Hello
+else:
+    print("字符串中不包含Hello")
+```
+3. 字符串的查找操作是区分大小写的，如果需要进行不区分大小写的查找，可以将字符串转换为统一的大小写后再进行查找
+```python
+s = "Hello,World!"
+index = s.lower().find("world")
+print(index) # 输出6，"world"在字符串中的起始索引位置，忽略大小写
+```
+### <span style="color:rgb(144,120,249)">count计数</span>
+count()方法用于统计子字符串在字符串中出现的次数，返回一个整数值。
+```python
+s = "Hello, World! Hello!"
+count = s.count("Hello")
+print(count) # 输出2，"Hello"在字符串中出现了两次
+```
+
+### <span style="color:rgb(144,120,249)">字符串的判断</span>
+字符串的判断可以使用isalpha()方法、isdigit()方法、isspace()方法等来实现。
+1. isalpha()方法用于判断字符串是否只包含字母字符；
+2. isdigit()方法用于判断字符串是否只包含数字字符；
+3. isspace()方法用于判断字符串是否只包含空白字符。
+```python
+s1 = "Hello"
+s2 = "12345"
+s3 = "   "
+# 判断字符串是否只包含字母字符
+print(s1.isalpha()) # 输出True，s1只包含字母字符
+print(s2.isalpha()) # 输出False，s2包含数字字符
+# 判断字符串是否只包含数字字符
+print(s1.isdigit()) # 输出False，s1包含字母字符
+print(s2.isdigit()) # 输出True，s2只包含数字字符
+# 判断字符串是否只包含空白字符
+print(s1.isspace()) # 输出False，s1包含字母字符
+print(s3.isspace()) # 输出True，s3只包含空白字符
+```
+4. startwith()方法用于判断字符串是否以指定的子字符串开头；
+```python
+print(s1.startswith("He")) # 输出True，s1以"He"开头
+print(s1.startswith("he")) # 输出False，s1不以"he"开头，区分大小写
+print(s1.startswith("he",3,6)) # 输出False，在索引3到6（不包括6）之间s1不以"he"开头
+```
+5. endwith()方法用于判断字符串是否以指定的子字符串结尾。
+```python
+print(s1.endswith("lo")) # 输出True，s1以"lo"结尾
+print(s1.endswith("LO")) # 输出False，s1不以"LO"结尾，区分大小写
+print(s1.endswith("LO",0,5)) # 输出False，在索引0到5（不包括5）之间s1不以"LO"结尾
+```
+6. isupper()方法用于判断字符串是否只包含大写字母字符；
+```python
+s1 = "Hello"
+print(s1.isupper()) # 输出False，s1不只包含大写字母字符
+```
+7. islower()方法用于判断字符串是否只包含小写字母字符。
+```python
+s1 = "Hello"
+print(s1.islower()) # 输出False，s1不只包含小写字母
+```
+
+
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
+1. isalpha()方法、isdigit()方法和isspace()方法都是字符串对象的方法，只能用于字符串类型的数据，如果对非字符串类型的数据调用这些方法，会抛出AttributeError异常
+```python
+num = 12345
+print(num.isdigit()) # 会抛出AttributeError异常，因为num不是字符串类型
+```
+2. 这些方法的判断是基于字符串中的每个字符进行的，如果字符串中包含非字母、非数字或非空白字符，这些方法将返回False
+```python
+s = "Hello123"
+print(s.isalpha()) # 输出False，s包含数字字符
+print(s.isdigit()) # 输出False，s包含字母字符
+```
+3. 这些方法对于空字符串的判断结果是False，因为空字符串不包含任何字符
+```python   
+s = ""
+print(s.isalpha()) # 输出False，空字符串不包含字母字符
+print(s.isdigit()) # 输出False，空字符串不包含数字字符
+print(s.isspace()) # 输出False，空字符串不包含空白字符
+``` 
+### <span style="color:rgb(144,120,249)">字符串的修改</span>
+字符串的修改可以使用replace()、strip()、split()、upper()、lower()、capitalize()等方法来实现。
+replace()方法用于替换字符串中的指定子字符串；
+```python
+s = "Hello, World!"
+new_s = s.replace("World", "Python")
+print(new_s) # 输出Hello, Python!
+```
+
+strip()方法用于去除字符串两端的空白字符；
+```python
+s = "  Hello, World!  "
+stripped_s = s.strip()
+print(stripped_s) # 输出Hello, World!
+```
+
+split()方法用于将字符串分割成一个列表，默认以空白字符为分隔符；
+```python
+s = "Hello, World!"
+split_s = s.split(',') # 以逗号为分隔符进行分割
+print(split_s) # 输出['Hello,', 'World!']
+print(s.split()) # 以空白字符为分隔符进行分割，输出['Hello,', 'World!']
+print(s.split('o')) # 以字母'o'为分隔符进行分割，输出['Hell', ', W', 'rld!']
+print(s.split('o', 1)) # 以字母'o'为分隔符进行分割，最多分割一次，输出['Hell', ', World!']
+``` 
+
+upper()方法用于将字符串转换为大写字母；
+```python
+s = "  Hello, World!  "
+upper_s = s.upper()
+print(upper_s) # 输出  HELLO, WORLD!
+```
+
+lower()方法用于将字符串转换为小写字母。
+```python
+s = "  Hello, World!  "
+lower_s = s.lower()
+print(lower_s) # 输出  hello, world!
+```
+capitalize()方法用于将字符串的首字母转换为大写，其他字母转换为小写。
+```python
+s = "hELLO, wORLD!"
+capitalized_s = s.capitalize()
+print(capitalized_s) # 输出Hello, world!
+```
+
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
+1. replace()方法返回一个新的字符串，原字符串保持不变，如果要修改原字符串，需要将返回的新字符串赋值给原变量
+```python
+s = "Hello, World!"
+s = s.replace("World", "Python") # 将替换后的字符串赋值给原变量s
+print(s) # 输出Hello, Python!
+```
+2. strip()方法只会去除字符串两端的空白字符，如果需要去除字符串中间的空白字符，可以使用replace()方法将空白字符替换为空字符串
+```python
+s = "  Hello, World!  "
+stripped_s = s.strip() # 去除两端的空白字符
+print(stripped_s) # 输出Hello, World!
+no_space_s = s.replace(" ", "") # 去除字符串中所有的空白字符
+print(no_space_s) # 输出Hello,World!
+```
+3. upper()方法和lower()方法返回一个新的字符串，原字符串保持不变，如果要修改原字符串，需要将返回的新字符串赋值给原变量
+```python
+s = "Hello, World!"
+s = s.upper() # 将字符串转换为大写字母并赋值给原变量s
+print(s) # 输出HELLO, WORLD!
+s = s.lower() # 将字符串转换为小写字母并赋值给原变量s
+print(s) # 输出hello, world!
+```
+
+## <span style="color:rgb(255, 146, 18)">列表</span>
+列表是一种有序、可变的集合类型，可以包含任意类型的元素。列表使用方括号（[]）定义，元素之间用逗号分隔。以下是一些常见的列表操作示例：
+
+```python
+# 定义一个列表
+fruits = ["apple", "banana", "cherry"]
+# 访问列表元素
+print(fruits[0]) # 输出apple，访问列表的第一个元素
+print(fruits[1]) # 输出banana，访问列表的第二个元素
+print(fruits[-1]) # 输出cherry，访问列表的最后一个元素
+# 修改列表元素
+fruits[1] = "blueberry" # 将列表的第二个元素修改为"blueberry"
+print(fruits) # 输出['apple', 'blueberry', 'cherry']
+# 添加元素到列表
+fruits.append("orange") # 在列表末尾添加一个元素"orange"
+print(fruits) # 输出['apple', 'blueberry', 'cherry', 'orange']
+fruits.insert(1, "grape") # 在列表的索引
+print(fruits) # 输出['apple', 'grape', 'blueberry', 'cherry', 'orange']
+# 删除列表元素
+fruits.remove("blueberry") # 删除列表中的元素"blueberry"
+print(fruits) # 输出['apple', 'grape', 'cherry', 'orange']
+del fruits[0] # 删除列表中的第一个元素
+print(fruits) # 输出['grape', 'cherry', 'orange']
+```
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
+1. 列表中的元素可以是任意类型，包括数字、字符串、布尔值、列表等，列表可以包含不同类型的元素
+2. 列表是有序的集合类型，元素的顺序是固定的，可以通过索引访问和修改列表中的元素
+3. 列表是可变的集合类型，可以修改列表中的元素，添加新的元素或删除现有的元素
+4. 列表的索引从0开始，负数索引表示从列表的末尾开始访问元素，-1表示最后一个元素，-2表示倒数第二个元素，以此类推
+5. 在使用列表操作时，要注意索引的范围，避免出现IndexError异常
+```python
+fruits = ["apple", "banana", "cherry"]
+print(fruits[3]) # 会抛出IndexError异常，因为索引3超出列表的范围
+``` 
