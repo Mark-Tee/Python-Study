@@ -539,7 +539,7 @@ while i <= 3:
 
 ## <span style="color:rgb(255, 146, 18)">for循环与break、continue关键字</span>
 ### <span style="color:rgb(144,120,249)">for循环</span>
-for循环用于遍历一个序列（如列表、字符串、元组等）或其他可迭代对象，基本的for循环结构如下：
+for循环用于遍历一个序列 <i style="color:rgb(28, 122, 210)">（如列表、字符串、元组等）</i>或其他可迭代对象，基本的for循环结构如下：
 ```python  
 for 变量 in 可迭代对象:
     代码块
@@ -897,24 +897,72 @@ print(s) # 输出hello, world!
 ```python
 # 定义一个列表
 fruits = ["apple", "banana", "cherry"]
+# 查找列表元素
+print("banana" in fruits) # 输出True，"banana"是fruits列表的元素
+print("orange" not in fruits) # 输出True，"orange"不是fruits列表的元素
+
 # 访问列表元素
 print(fruits[0]) # 输出apple，访问列表的第一个元素
 print(fruits[1]) # 输出banana，访问列表的第二个元素
 print(fruits[-1]) # 输出cherry，访问列表的最后一个元素
+
 # 修改列表元素
 fruits[1] = "blueberry" # 将列表的第二个元素修改为"blueberry"
 print(fruits) # 输出['apple', 'blueberry', 'cherry']
+
 # 添加元素到列表
 fruits.append("orange") # 在列表末尾添加一个元素"orange"
 print(fruits) # 输出['apple', 'blueberry', 'cherry', 'orange']
-fruits.insert(1, "grape") # 在列表的索引
+fruits.insert(1, "grape") # 在列表的索引1位置插入元素"grape"
 print(fruits) # 输出['apple', 'grape', 'blueberry', 'cherry', 'orange']
+
 # 删除列表元素
 fruits.remove("blueberry") # 删除列表中的元素"blueberry"
 print(fruits) # 输出['apple', 'grape', 'cherry', 'orange']
 del fruits[0] # 删除列表中的第一个元素
 print(fruits) # 输出['grape', 'cherry', 'orange']
+
+# 列表切片
+print(fruits[0:2]) # 输出['grape', 'cherry']，切片从索引0到索引1（不包括2）
+print(fruits[1:3]) # 输出['cherry', 'orange']，切片从索引1到索引2（不包括3）
+print(fruits[:2]) # 输出['grape', 'cherry']，切片从列表开头到索引1（不包括2）
+print(fruits[1:3]) # 输出['cherry', 'orange']，切片从索引1到索引2（不包括3）
+print(fruits[1:4]) # 输出['cherry', 'orange']，切片从索引1到索引3（不包括4）
+
+# 列表是可迭代的，可以使用for循环遍历列表中的元素
+for fruit in fruits:
+    print(fruit) # 输出grape、cherry、orange
+
+# index、count方法，跟字符串的用法一样
+print(fruits.index("cherry")) # 输出0，"cherry"在列表中的索引位置
+print(fruits.count("orange")) # 输出1，"orange"在列表中出现了1次
+
+#列表排序sort()
+fruits.sort() # 对列表进行升序排序
+print(fruits) # 输出['cherry', 'grape', 'orange']
+fruits.sort(reverse=True) # 对列表进行降序排序
+print(fruits) # 输出['orange', 'grape', 'cherry']
 ```
+### <span style="color:rgb(144,120,249)">列表推导式</span>
+列表推导式是一种简洁的语法，用于创建新的列表。它可以通过一个表达式和一个可迭代对象来生成一个新的列表。基本的列表推导式结构如下：
+```python
+new_list = [表达式 for 变量 in 可迭代对象 if 条件] 
+#in后面不仅可以是列表，还可以是range()函数生成的序列、字符串等可迭代对象
+```
+
+```python
+# 创建一个包含1到10之间偶数的列表
+even_numbers = [x for x in range(1, 11) if x % 2 == 0]
+print(even_numbers) # 输出[2, 4, 6, 8, 10]
+``` 
+### <span style="color:rgb(144,120,249)">列表嵌套</span>
+列表嵌套是指在一个列表中包含另一个列表，可以实现更复杂的数据结构。基本的列表嵌套结构如下：
+```python  
+nested_list = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+print(nested_list[0]) # 输出[1, 2, 3]，访问嵌套列表的第一个元素
+print(nested_list[1][2]) # 输出6，访问嵌套列表中的第二个列表的第三个元素
+```
+
 #### <span style="color: rgb(255, 0, 0);" >注意</span>
 1. 列表中的元素可以是任意类型，包括数字、字符串、布尔值、列表等，列表可以包含不同类型的元素
 2. 列表是有序的集合类型，元素的顺序是固定的，可以通过索引访问和修改列表中的元素
