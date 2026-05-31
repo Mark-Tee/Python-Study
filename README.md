@@ -27,7 +27,7 @@ print("Hello World")
 #### <span style="color: rgb(255, 0, 0);" >注意</span>
 
 1. 输入错误：python中的符号都是要用英文模式下的
-2. 缩进错误：print要定格写，否则就报错
+2. 缩进错误：print要顶格写，否则就报错
 3. 语法错误：一个print必须单独写一行，错误信息遇到Syntax说明语法有问题
 4. 命名错误：字符串必须加上引号，单引号或双引号都可
 
@@ -176,20 +176,60 @@ print(type(height)) # 输出<class 'float'>
 ### <span style="color:rgb(144,120,249)">字符串</span>
 字符串是由一系列字符组成的文本数据，可以使用单引号、双引号或三引号来定义字符串。字符串支持各种操作，如连接、切片、格式化等。
 
+#### <span style="color: rgb(255, 0, 0);" >注意</span>
+1. 多行注释和三引号定义的字符串是不同的，前者是注释，不会被程序执行，而后者是字符串，可以被程序使用
+2. 字符串连接可以使用加号（+）运算符，但要注意字符串必须加上引号，否则会被当作变量名，导致错误
+
 ```python
 # 定义字符串变量
 name = "Alice"
+name1 = xuduo # 报错，没有引号，xuduo被当作变量名，但没有定义，所以会报错
 greeting = 'Hello, ' + name + '!' # 字符串连接
 print(greeting) # 输出Hello, Alice!
 ```
 
-字符串切片可以使用索引来获取字符串的部分内容：
+### <span style="color:rgb(144,120,249)">格式化输出</span>
+格式化输出是指将变量的值插入到字符串中的特定位置，以便更方便地显示和输出信息。Python提供了多种格式化输出的方法，如百分号（%）格式化、str.format()方法和f-string（格式化字符串字面量）。
 
-```python   
+#### <span style="color: rgb(170, 206, 62);" >占位符</span>
+占位符只占据位置，并不会被输出
+
+| 占位符 | 说明 |
+| --- | --- |
+| %s | 字符串 |
+| %d | 整数 |
+| %f | 浮点数 |
+
+%4d表示输出的整数至少占4个字符宽度，如果整数不足4位，则在前面补空格；如果少于4位，则在前面补空格；如果超过4位，则按照实际宽度输出。
+```python
 name = "Alice"
-print(name[0]) # 输出第一个字符A
-print(name[1:4]) # 输出从索引1到索引3的字符lice
-print(name[-1]) # 输出最后一个字符e
+age = 30
+greeting = "Hello, %s! You are %d years old." % (name, age) # 使用占位符进行格式化输出
+print(greeting) # 输出Hello, Alice! You are 30 years old.
+print("Age: %4d" % age) # 输出Age:   30，整数占4个字符宽度，前面补空格
+print("Age: %4d" % 5) # 输出Age:    5，整数占4个字符宽度，前面补空格
+print("Age: %4d" % 12345) # 输出Age: 12345，整数超过4个字符宽度，按照实际宽度输出
 ```
 
+%f表示输出的浮点数默认保留6位小数，遵循四舍五入规则，可以使用%.nf的格式来指定保留n位小数。
+```python
+pi = 3.141592653589793
+print("Pi: %f" % pi) # 输出Pi: 3.141593，浮点数保留6位小数，遵循四舍五入规则
+print("Pi: %.2f" % pi) # 输出Pi: 3.14，浮点数保留2位小数，遵循四舍五入规则
+```
 
+%%表示输出一个百分号（%），因为%在格式化字符串中有特殊意义，所以需要使用%%来表示一个普通的百分号。
+```python
+discount = 0.2
+print("Discount: %.2f%%" % (discount * 100)) # 输出Discount: 20.00%，浮点数保留2位小数，遵循四舍五入规则
+```
+
+f格式化字符串字面量（f-string）是Python 3.6引入的一种格式化字符串的方法，使用f或F前缀来定义字符串，并在字符串中使用花括号{}来插入变量的值。
+```python
+name = "Alice"
+age = 30
+greeting = f"Hello, {name}! You are {age} years old." # 使用f-string进行格式化输出
+print(greeting) # 输出Hello, Alice! You are 30 years old.
+pi = 3.141592653589793
+print(f"Pi: {pi:.2f}") # 输出Pi: 3.14
+```
