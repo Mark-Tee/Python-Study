@@ -552,7 +552,7 @@ def check(age, is_student):
         return "30岁以上"
     if is_student:
         return "年轻的学生"
-    return "年轻的成年人"
+    return "年轻的人"
 ```
 
 ---
