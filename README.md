@@ -1329,7 +1329,7 @@ print(str(None))           # "None"
 # str() 与 repr() 的区别
 import datetime
 d = datetime.date(2024, 6, 6)
-print(str(d))              # "2024-06-06"  （人类可读）
+print(str(d))              # "2024-06-06"  （可读）
 print(repr(d))             # "datetime.date(2024, 6, 6)"  （给开发者看的）
 ```
 
