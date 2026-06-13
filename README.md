@@ -1907,7 +1907,7 @@ backup = copy.deepcopy(matrix)   # 嵌套 → 深拷贝
 | `range(...)` | 生成整数序列 |
 | `enumerate(x)` | 带索引遍历 |
 | `zip(a, b)` | 并行迭代 |
-| `sorted(x)` | 返回排序后列表 |
+| `sorted(x, key=..., reverse=...)` | 按 key 返回值排序，reverse=True 降序 |
 | `max(x)`, `min(x)`, `sum(x)` | 最大/最小/求和 |
 | `abs(x)` | 绝对值 |
 | `round(x, n)` | 四舍五入到 n 位 |
@@ -1948,4 +1948,50 @@ print(s[::-1])              # "olleh"
 lst = [1, 2, 3]
 print(lst[::-1])            # [3, 2, 1]
 print(list(reversed(lst)))  # [3, 2, 1]
+```
+
+**7. 闭包是什么？有什么作用？**
+> 闭包 = 外部函数（盒子）+ 内部函数（按钮）。外部函数保护变量，内部函数是操作变量的唯一入口。作用是**让函数"记住"状态**，避免用全局变量。
+
+```python
+def make_counter():         # 盒子
+    count = 0
+    def inner():            # 按钮
+        nonlocal count
+        count += 1
+        return count
+    return inner
+
+c = make_counter()
+print(c())   # 1
+print(c())   # 2  ← count 被记住了
+```
+
+**8. lambda 和 def 的区别？**
+| | `def` | `lambda` |
+|---|---|---|
+| **语法** | `def name():` 多行 | `name = lambda: 表达式` 一行 |
+| **return** | 必须写 | 自动返回表达式结果 |
+| **可读性** | 高 | 低（仅适合简单逻辑） |
+| **场景** | 复杂业务、复用 | `sorted`/`filter` 的 `key` 参数 |
+
+**9. global 和 nonlocal 的区别？**
+> `global` 声明操作**全局变量**；`nonlocal` 声明操作**外层函数的局部变量**（仅在嵌套函数中使用，不能是全局变量）。
+
+```python
+x = 10         # 全局变量
+def outer():
+    y = 20     # 外层局部变量
+    def inner():
+        global x      # 改全局 x
+        nonlocal y    # 改外层 y
+```
+
+**10. `sorted` 的 `key` 参数怎么用？**
+> `key` 告诉 `sorted` 按什么排序。`lambda x` 的 `x` 依次是列表中每个元素，返回什么就按什么排。
+
+```python
+data = [("Alice", 85), ("Bob", 92)]
+sorted(data, key=lambda x: x[1], reverse=True)  # 按成绩从高到低
+sorted(data, key=lambda x: len(x[0]))            # 按姓名长度
 ```
