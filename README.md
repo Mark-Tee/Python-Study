@@ -1349,7 +1349,112 @@ modify()
 print(x)         # 20
 ```
 
----
+**nonlocal — 修改外层函数的局部变量：**
+
+```python
+def outer():
+    count = 0           # 外层函数的局部变量
+
+    def inner():
+        nonlocal count  # 声明 count 是外层变量（非全局）
+        count += 1
+        return count
+
+    return inner
+
+f = outer()
+print(f())   # 1
+print(f())   # 2
+```
+
+> ⚠️ **注意**：`nonlocal` 只能在嵌套函数中使用，声明的变量必须是外层函数的局部变量，不能是全局变量。
+
+### 函数嵌套
+
+> 在一个函数内部定义另一个函数，称为函数嵌套（或内部函数）。
+
+```python
+def outer():
+    print("外层函数")
+
+    def inner():
+        print("内层函数")
+
+    inner()            # 在正确的位置调用内层函数
+
+outer()
+# 输出：
+# 外层函数
+# 内层函数
+```
+
+> ⚠️ **常见错误**：不要把内层函数的调用写在定义之前，否则永远执行不到。
+
+```python
+# ❌ 调用在定义之前 → 永远执行不到
+def outer():
+    inner()            # 此时 inner 还未定义！
+    def inner():
+        print("内层函数")
+
+# ❌ 在内层函数中调用外层函数 → 死循环
+def outer():
+    def inner():
+        outer()        # 无限递归，直到超过递归最大深度
+```
+
+> 💡 **使用场景**：封装辅助逻辑、实现闭包、作为装饰器的基础。
+
+### 匿名函数 lambda
+
+> lambda 是一种简短的函数定义方式，适用于**简单、一次性**的逻辑。
+
+```python
+# 语法：lambda 形参 : 返回值（表达式）
+add = lambda a, b: a + b
+print(add(3, 5))   # 8
+```
+
+> ⚠️ `lambda` 不需要 `return`，表达式本身的结果就是返回值。
+
+```python
+# 无参数
+greet = lambda: "Hello!"
+print(greet())          # Hello!
+
+# 一个参数
+square = lambda x: x ** 2
+print(square(5))        # 25
+
+# 默认参数（必须放在非默认参数后面）
+info = lambda name, age=18: (name, age)
+print(info("Alice"))       # ('Alice', 18)
+print(info("Bob", 25))     # ('Bob', 25)
+
+# 关键字参数（**kwargs）
+print_info = lambda **kwargs: kwargs
+print(print_info(name="Alice", age=30))
+# → {'name': 'Alice', 'age': 30}
+```
+
+### lambda vs def
+
+| | `def` 函数 | `lambda` 匿名函数 |
+|---|---|---|
+| **定义方式** | `def name():` | `name = lambda:` |
+| **代码行数** | 多行语句 | 只能一行表达式 |
+| **可读性** | 高（适合复杂逻辑） | 低（适合简单逻辑） |
+| **return** | 显式写 `return` | 自动返回表达式结果 |
+| **适用场景** | 复杂业务逻辑、可复用模块 | 简单计算、`sorted`/`filter` 的 key 参数 |
+
+```python
+# 典型用法：作为 sorted 的排序键
+students = [("Alice", 85), ("Bob", 92), ("Charlie", 78)]
+students.sort(key=lambda x: x[1])   # 按分数排序
+# → [('Charlie', 78), ('Alice', 85), ('Bob', 92)]
+```
+
+> 💡 **原则**：简单逻辑用 `lambda`，复杂逻辑用 `def`。可读性始终第一。
 
 ## 18. 类型转换
 
@@ -1633,9 +1738,7 @@ backup = copy.deepcopy(matrix)   # 嵌套 → 深拷贝
 
 > 📌 **学习建议**：多动手敲代码，遇到错误先看最后一行报错信息。善用 `print()` 和 `type()` 调试，不懂就查官方文档或 `help()` 函数。
 
----
-
-*最后更新：2026-06-07*
+*最后更新：2026-06-13*
 
 ---
 
