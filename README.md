@@ -1501,7 +1501,32 @@ students.sort(key=lambda x: x[1])   # 按分数排序
 # → [('Charlie', 78), ('Alice', 85), ('Bob', 92)]
 ```
 
-> 💡 **原则**：简单逻辑用 `lambda`，复杂逻辑用 `def`。可读性始终第一。
+**sorted + lambda 的核心原理**：`key` 告诉 `sorted` 按什么排序。排序时，`lambda` 的参数 `x` 依次代表列表中每个元素，lambda 返回什么，sorted 就按什么排。
+
+```python
+students = [("Alice", 85), ("Bob", 92), ("Charlie", 78)]
+
+# 按成绩从高到低（x[0]=姓名, x[1]=成绩）
+sorted(students, key=lambda x: x[1], reverse=True)
+# → [('Bob', 92), ('Alice', 85), ('Charlie', 78)]
+
+# 按姓名长度排序（len(x[0]) = 姓名字符数）
+sorted(students, key=lambda x: len(x[0]))
+# → [('Bob', 92), ('Alice', 85), ('Charlie', 78)]   # Bob=3, Alice=5, Charlie=7
+
+# 按成绩的个位数排序
+sorted(students, key=lambda x: x[1] % 10)
+# → [('Bob', 92), ('Alice', 85), ('Charlie', 78)]   # 2 < 5 < 8
+```
+
+| 需求 | `key=lambda x: ...` | 原理 |
+|------|---------------------|------|
+| 按元组第 N 项排序 | `x[N]` | 取值直接比较 |
+| 按字符串长度排序 | `len(x[0])` | 返回长度比较 |
+| 按计算结果排序 | `表达式` | 返回计算结果比较 |
+| 降序 | 加 `reverse=True` | 从大到小 |
+
+> 💡 **关键**：`lambda x` 中的 `x` 不是变量名，而是一个"占位符"——排序过程中它会被依次替换为列表中的每个元素。你用 `x[1]` 还是 `len(x)` 都可以，只要返回值能比较。
 
 ## 18. 类型转换
 
