@@ -685,6 +685,55 @@ for i in range(1, 10):
 
 > ⚠️ `break` 和 `continue` 只作用于**最近一层**循环，不影响外层。
 
+### 🔷 练习常见错误
+
+#### ❌ 错误 1：`return` 写在循环里面
+
+遍历检查时，`return 0` 写在 `for` 里面会导致只检查第一个元素就返回：
+
+```python
+# ❌ return 0 在循环里面 → 第一个不匹配就返回了
+def check_upper(password):
+    for char in password:
+        if char.isupper():
+            return 2
+        return 0        # ← 跟 if 对齐 = 在循环体里！
+
+# ✅ return 0 在循环外面（和 for 对齐）→ 全部遍历完再返回
+def check_upper(password):
+    for char in password:
+        if char.isupper():
+            return 2
+    return 0            # ← 和 for 对齐 = 循环结束后才执行
+```
+
+> 💡 **重点**：`return` 会立即结束整个函数。循环中找到目标就 `return`，找不到就等循环跑完后 `return 0`。
+
+#### ❌ 错误 2：循环中的 else 导致重复输出
+
+不要把"没找到"的提示写在循环内部，否则每个不匹配的元素都输出一次：
+
+```python
+# ❌ 遍历中每个不匹配项都打印"没有结果"
+for name, phone in contacts.items():
+    if keyword in name:
+        print(f"匹配：{name}")
+    else:
+        print("没有结果")       # ← 匹配一个，打印 N-1 次"没有结果"
+
+# ✅ 先收集匹配项，循环结束后再一次性判断
+results = []
+for name, phone in contacts.items():
+    if keyword in name or keyword in phone:
+        results.append((name, phone))
+
+if results:
+    for name, phone in results:
+        print(f"匹配：{name}")
+else:
+    print("没有结果")            # ← 只输出一次
+```
+
 ---
 
 ## 11. 字符串编码与常见操作
@@ -841,6 +890,24 @@ print(s)                       # "  Hello, World!  "
 ```
 
 > 💡 **字符串不可变**意味着每次修改都创建新对象。大量拼接时用 `"".join()` 比 `+` 高效得多。
+
+### 🔷 练习常见错误
+
+#### ❌ 模糊搜索用 `==` 而不是 `in`
+
+```python
+# ❌ 精确匹配：只能找到完全相同的
+keyword = "张"
+if keyword == name:        # ← "张" == "张三" → False，找不到！
+    ...
+
+# ✅ 模糊匹配：子串包含即可
+keyword = "张"
+if keyword in name:        # ← "张" in "张三" → True，找到了！
+    ...
+```
+
+> 💡 `in` 做子串匹配（模糊搜索），`==` 做完全相等判断。
 
 ---
 
@@ -1108,6 +1175,32 @@ reversed_dict = {v: k for k, v in original.items()}
 ```
 
 > ⚠️ **关键限制**：字典的键必须是**不可变类型**（字符串、数字、元组等），不能用列表或字典作为键。
+
+### 🔷 练习常见错误
+
+#### ❌ "先占位再回滚" vs "先验证再提交"
+
+```python
+# ❌ 先加进去，校验失败再删掉（多一步回滚，有风险）
+contacts[name] = ''          # 先占位
+if 校验手机号失败:
+    del contacts[name]       # 再回滚 → 万一回滚前崩溃，脏数据留在字典里
+
+# ✅ 先验证，都通过了再加（更安全）
+name = input("姓名: ").strip()
+if name in contacts:
+    print("姓名已存在")
+    return                   # 压根没加，不需要清理
+
+phone = input("手机号: ").strip()
+if not (phone.isdigit() and len(phone) == 11):
+    print("手机号错误")
+    return                   # 也没加，干净退出
+
+contacts[name] = phone       # 一切 OK 才写入
+```
+
+> 💡 **原则**：先校验所有输入，全部通过后再写入。这个习惯在数据库、文件操作中更为重要——写一半再回滚代价很大。
 
 ---
 
