@@ -1528,6 +1528,48 @@ sorted(students, key=lambda x: x[1] % 10)
 
 > 💡 **关键**：`lambda x` 中的 `x` 不是变量名，而是一个"占位符"——排序过程中它会被依次替换为列表中的每个元素。你用 `x[1]` 还是 `len(x)` 都可以，只要返回值能比较。
 
+### 练习常见错误
+
+**❌ 错误 1：lambda 不写参数，用固定索引取元素**
+
+```python
+students = [("Alice", 85), ("Bob", 92), ("Charlie", 78)]
+
+# ❌ 没写参数 x，直接拿 students[0][2] → 永远取第一个元素且索引用错
+sorted(students, key=lambda: students[0][2])
+
+# ✅ x 是占位符，依次代表每个元组，x[1] 就是每个学生的成绩
+sorted(students, key=lambda x: x[1])
+```
+
+> 💡 `lambda x` 的 `x` 不是固定变量名，排序时它**轮流等于列表中每个元素**。不写参数 = 没东西可换 = 永远取固定索引。
+
+**❌ 错误 2：按姓名长度和按姓名混淆**
+
+```python
+# ❌ 按姓名首字母排（"Alice" vs "Bob" vs "Charlie"）
+sorted(students, key=lambda x: x[0])
+
+# ✅ 按姓名长度排（5 vs 3 vs 7）
+sorted(students, key=lambda x: len(x[0]))
+```
+
+> 💡 要长度就 `len()`，不要漏掉。`x[0]` 返回字符串本身，`len(x[0])` 返回字符串长度。
+
+**❌ 错误 3：不敢用字典做 `+=` 统计**
+
+```python
+result = {}
+for s in scores:
+    grade = to_grade(s)        # 算出等级
+    if grade in result:
+        result[grade] += 1     # 已有 → 次数 +1
+    else:
+        result[grade] = 1      # 第一次 → 初始化为 1
+```
+
+> 💡 `result[grade] += 1` 就是 `result[grade] = result[grade] + 1`，和 `x += 3` 一回事。先取出当前值 → +1 → 存回去。字典的修改和变量赋值本质完全相同。
+
 ## 18. 类型转换
 
 > 类型转换是将一种数据类型转换为另一种数据类型，使用内置的类型转换函数实现。

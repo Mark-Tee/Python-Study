@@ -74,14 +74,22 @@ students = [("Alice", 85), ("Bob", 92), ("Charlie", 78)]
 # print(sorted_1)
 sorted_1 = sorted(students, key=lambda x:x[1],reverse=True)
 # 2. 按姓名长度排序（短的在前）
-sorted_2 = sorted(students, key=lambda ...)
+sorted_2 = sorted(students, key=lambda x:len(x[0]))
 # print(sorted_2)
 
 
 # === 题目四 ===
 scores = [85, 92, 78, 65, 90, 55, 72]
-
+to_grade = lambda s:"优秀" if s>=90 else("良好" if 80<=s<=89 else ("中等" if 60<=s<=79 else "不及格")) 
+result = {}
+for i in scores :
+    grade = to_grade(i)
+    if grade in result:
+        result[grade]+=1
+    else:
+        result[grade]=1
 # 提示：写一个 lambda，输入分数，返回等级字符串
+
 # to_grade = lambda s: ...
 # 然后遍历 scores，手动统计到字典
 
@@ -108,4 +116,4 @@ if __name__ == "__main__":
 
     # 题目四
     print("\n=== 题目四 ===")
-    # print("分数段统计:", result)
+    print("分数段统计:", result)
