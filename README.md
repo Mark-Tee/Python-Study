@@ -1405,6 +1405,53 @@ def outer():
 
 > 💡 **使用场景**：封装辅助逻辑、实现闭包、作为装饰器的基础。
 
+### 闭包
+
+> 闭包 = 外部函数（盒子）+ 内部函数（按钮）。外部函数把变量保护起来，内部函数是操作变量的唯一入口。
+
+**为什么需要闭包？** 普通函数每次调用，局部变量都重新初始化。如果想"记住"上一次的值，用全局变量又怕被意外修改。闭包把变量藏起来，安全又可累加。
+
+```python
+# ❌ 普通函数：每次调用 count 都归零
+def counter():
+    count = 0
+    count += 1
+    return count
+print(counter())   # 1
+print(counter())   # 1   ← 永远是 1
+
+# ❌ 全局变量：count 暴露在外，谁都能改
+count = 0
+def counter():
+    global count
+    count += 1
+    return count
+# count = 999  ← 随时可能被意外修改！
+
+# ✅ 闭包：count 藏起来，只能通过 inner 操作
+def make_counter():
+    count = 0
+    def inner():
+        nonlocal count
+        count += 1
+        return count
+    return inner
+
+c1 = make_counter()   # 一个独立的计数器，count=0
+c2 = make_counter()   # 另一个独立的计数器，count=0
+print(c1())   # 1
+print(c1())   # 2
+print(c2())   # 1   ← c1 和 c2 互不影响
+```
+
+| 方式 | 状态保留 | 数据安全 | 独立性 |
+|------|---------|---------|--------|
+| 普通函数局部变量 | ❌ 每次归零 | ✅ | — |
+| 全局变量 | ✅ | ❌ 谁都能改 | — |
+| **闭包** | ✅ | ✅ | ✅ 每次 `make_counter()` 创建独立副本 |
+
+> 💡 **一句话**：闭包就是"有记忆的函数"。它记住了创建时那一层变量的状态。
+
 ### 匿名函数 lambda
 
 > lambda 是一种简短的函数定义方式，适用于**简单、一次性**的逻辑。
