@@ -1360,11 +1360,11 @@ def outer():
         count += 1
         return count
 
-    return inner
+    return inner        # 返回 inner 函数本身（不是调用结果）
 
-f = outer()
-print(f())   # 1
-print(f())   # 2
+f = outer()             # f 现在就是 inner 函数
+print(f())   # 调用 inner() → 1
+print(f())   # 调用 inner() → 2（count 被 inner 记住了）
 ```
 
 > ⚠️ **注意**：`nonlocal` 只能在嵌套函数中使用，声明的变量必须是外层函数的局部变量，不能是全局变量。
