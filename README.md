@@ -1526,7 +1526,35 @@ sorted(students, key=lambda x: x[1] % 10)
 | 按计算结果排序 | `表达式` | 返回计算结果比较 |
 | 降序 | 加 `reverse=True` | 从大到小 |
 
-> 💡 **关键**：`lambda x` 中的 `x` 不是变量名，而是一个"占位符"——排序过程中它会被依次替换为列表中的每个元素。你用 `x[1]` 还是 `len(x)` 都可以，只要返回值能比较。
+**x 为什么代指元组？——sorted 内部原理**
+
+`x` 不是我们定义的变量，而是 **sorted 硬塞给 key 函数的参数**。列表中装什么，`x` 就是什么：
+
+```python
+students = [("Alice", 85), ("Bob", 92), ("Charlie", 78)]
+
+sorted(students, key=lambda x: len(x[0]))
+```
+
+sorted 内部等价于做这些事：
+
+```python
+# sorted 依次取列表中的每个元素，塞给 key 函数
+x = ("Alice", 85)    # 第 1 个元素 → len(x[0]) = len("Alice")  = 5
+x = ("Bob", 92)      # 第 2 个元素 → len(x[0]) = len("Bob")    = 3
+x = ("Charlie", 78)  # 第 3 个元素 → len(x[0]) = len("Charlie") = 7
+
+# 然后按返回值排序：3 → 5 → 7，短的在前
+```
+
+**`x` 叫什么无所谓**，叫 `stu`、`item` 效果一样：
+
+```python
+sorted(students, key=lambda stu: len(stu[0]))   # 照样跑
+sorted(students, key=lambda a: len(a[0]))        # 照样跑
+```
+
+> 💡 **一句话**：列表里装什么类型，`lambda x` 的 `x` 就是什么类型。装元组 `x` 就是元组，装字符串 `x` 就是字符串。是 **sorted 把它推进来的**，不是我们定义的。
 
 ### 练习常见错误
 
