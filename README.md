@@ -1995,3 +1995,12 @@ data = [("Alice", 85), ("Bob", 92)]
 sorted(data, key=lambda x: x[1], reverse=True)  # 按成绩从高到低
 sorted(data, key=lambda x: len(x[0]))            # 按姓名长度
 ```
+
+lambda结合if判断
+print("a比b小") if a<b else print("a大于等于b")
+comp = lambda a,b:"a比b小" if a<b else "a大于等于b" #a/b是形参，比较大小
+print(comp(8,5))
+特点
+lambda只能实现简单的逻辑，如果逻辑复杂且代码量较大，不建议使用lambda，降低代码的可读性，为后期的代码维护增加困难
+
+内置函数
