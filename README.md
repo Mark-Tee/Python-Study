@@ -1023,6 +1023,20 @@ for row in matrix:
 
 > ⚠️ **常见错误**：`fruits[3]` 索引超出范围 → `IndexError`
 
+### 练习常见错误
+
+**❌ 用 `list(生成器)` 代替列表推导式**
+
+```python
+# ❌ 写法别扭：生成器表达式套 list()
+result = list(x for x in products if x[1] > 20)
+
+# ✅ 标准列表推导式：括号直接变成方括号
+result = [x for x in products if x[1] > 20]
+```
+
+> 💡 效果一样，但 `[...]` 是列表推导式的**原生语法**，更简洁直观。看到方括号一眼就知道在造列表。
+
 ---
 
 ## 14. 元组
@@ -1201,6 +1215,22 @@ contacts[name] = phone       # 一切 OK 才写入
 ```
 
 > 💡 **原则**：先校验所有输入，全部通过后再写入。这个习惯在数据库、文件操作中更为重要——写一半再回滚代价很大。
+
+**❌ 用 `dict(生成器)` 代替字典推导式**
+
+```python
+products = [("苹果", 8.5), ("西瓜", 23.0)]
+
+# ⚠️ 能跑，dict() 吃了 (键, 值) 对
+result = dict(x for x in products)
+# → {'苹果': 8.5, '西瓜': 23.0}
+
+# ✅ 标准字典推导式：显式控制键值关系
+result = {name: price for name, price in products}
+# → {'苹果': 8.5, '西瓜': 23.0}
+```
+
+> 💡 `dict()` 能接受 `(key, value)` 对是侥幸，但字典推导式能**显式指定**哪个做键哪个做值，更易读，也更灵活（比如键值互换 `{v: k for ...}`）。
 
 ---
 
@@ -1597,6 +1627,36 @@ for s in scores:
 ```
 
 > 💡 `result[grade] += 1` 就是 `result[grade] = result[grade] + 1`，和 `x += 3` 一回事。先取出当前值 → +1 → 存回去。字典的修改和变量赋值本质完全相同。
+
+**❌ 错误 4：map 忘了返回所需结构**
+
+```python
+products = [("苹果", 8.5), ("西瓜", 23.0)]
+
+# ❌ 只返回价格 → 丢了名称和原价
+map(lambda x: x[1] * 0.8, products)
+# → [6.8, 18.4]  名称呢？原价呢？
+
+# ✅ 返回完整三元组
+map(lambda x: (x[0], x[1], round(x[1] * 0.8, 1)), products)
+# → [('苹果', 8.5, 6.8), ('西瓜', 23.0, 18.4)]
+```
+
+> 💡 `map` 返回什么就得到什么。想保留原始字段，就在 lambda 里把它们包进元组一起返回。
+
+**❌ 错误 5：忘记 filter/map 返回的是迭代器，要用 list() 看结果**
+
+```python
+# ❌ 直接打印看不到内容
+print(filter(lambda x: x[1] > 20, products))
+# → <filter object at 0x...>
+
+# ✅ list() 转列表
+print(list(filter(lambda x: x[1] > 20, products)))
+# → [('西瓜', 23.0), ('草莓', 35.0)]
+```
+
+> 💡 `filter()` 和 `map()` 返回的是**迭代器**（懒加载），不会自动展开。`list()` 强制它计算并转成可见的列表。
 
 ## 18. 类型转换
 
