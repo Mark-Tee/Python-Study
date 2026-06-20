@@ -1068,10 +1068,30 @@ print(t1 * 3)        # (1, 2, 1, 2, 1, 2)
 # 成员检查
 print(2 in t1)       # True
 
-# 解包 (unpacking)
-x, y = (3, 4)        # x=3, y=4
-a, *b = (1, 2, 3, 4) # a=1, b=[2, 3, 4]
+# 解包 (unpacking) — 去掉容器，直接获取里面的值
+
+# 方式一：一一对应（变量数和元素数必须相等）
+x, y = (3, 4)               # x=3, y=4
+a, b, c, d = (1, 2, 3, 4)   # ❌ 变量和元组个数不一致 → ValueError
+
+# 方式二：带 * 的变量收走剩余全部
+a, *b = (1, 2, 3, 4)        # a=1, b=[2, 3, 4]
+*a, b = (1, 2, 3, 4)        # a=[1, 2, 3], b=4
+
+# 方式三：函数调用时用 * 展开元组/列表
+def func(a, b, *args):       # *args 收走多余的位置参数
+    print(a, b)
+    print(args)
+
+func(1, 2, 3, 4, 5)
+# 1 2
+# (3, 4, 5)
+
+arg = (1, 2, 3, 4, 5)
+func(*arg)                   # * 展开元组，等价于 func(1, 2, 3, 4, 5)
 ```
+
+> 💡 **两种 * 的区别**：定义时 `def f(*args)` 是**打包**——多余参数收进元组；调用时 `f(*tup)` 是**拆包**——把元组展开成独立参数。
 
 ### 元组 vs 列表
 
@@ -1512,7 +1532,14 @@ print(info("Bob", 25))     # ('Bob', 25)
 print_info = lambda **kwargs: kwargs
 print(print_info(name="Alice", age=30))
 # → {'name': 'Alice', 'age': 30}
+
+# lambda 结合 if-else
+compare = lambda a, b: "a小" if a < b else "a大于等于b"
+print(compare(8, 5))   # a大于等于b
+print(compare(3, 9))   # a小
 ```
+
+> ⚠️ lambda 只能写**一行表达式**。`if-else` 可以，但 `if-elif-else` 多分支会非常长，此时应该用 `def`。
 
 ### lambda vs def
 
@@ -1657,6 +1684,74 @@ print(list(filter(lambda x: x[1] > 20, products)))
 ```
 
 > 💡 `filter()` 和 `map()` 返回的是**迭代器**（懒加载），不会自动展开。`list()` 强制它计算并转成可见的列表。
+
+### zip — 并行打包
+
+> `zip()` 将多个可迭代对象"拉链式"配对，返回元组的迭代器。
+
+```python
+names = [1, 2, 3]
+chars = ['a', 'b', 'c']
+
+# 迭代取出
+for pair in zip(names, chars):
+    print(pair)
+# (1, 'a')
+# (2, 'b')
+# (3, 'c')
+
+# 转列表查看
+print(list(zip(names, chars)))
+# → [(1, 'a'), (2, 'b'), (3, 'c')]
+```
+
+> ⚠️ 如果各列表长度不一致，按**最短的**那个截断。
+
+### reduce — 累积计算
+
+> `reduce()` 从前两个元素开始，逐步累积到后面所有元素。需要 `from functools import reduce`。
+
+```python
+from functools import reduce
+
+# 累加：1+2=3 → 3+3=6 → 6+4=10
+print(reduce(lambda x, y: x + y, [1, 2, 3, 4]))   # 10
+
+# 累乘：1×2=2 → 2×3=6 → 6×4=24
+print(reduce(lambda x, y: x * y, [1, 2, 3, 4]))   # 24
+```
+
+**执行过程：**
+```
+第 1 步：取 1, 2 → 1+2=3
+第 2 步：取 3, 3 → 3+3=6
+第 3 步：取 6, 4 → 6+4=10
+```
+
+> ⚠️ `reduce(func, seq)` 中的函数**必须接收两个参数**——第一个是累积值，第二个是下一个元素。
+
+### min / max 的 key 参数
+
+> 和 `sorted` 一样，`min` / `max` 也可以用 `key=` 指定比较依据。
+
+```python
+# 直接比较 → 最大是 5
+max(5, -8, 3)   # 5
+
+# 按绝对值比较 → 绝对值最大的是 -8
+max(5, -8, 3, key=abs)   # -8
+```
+
+### 内置函数补充
+
+| 函数 | 作用 | 示例 |
+|------|------|------|
+| `abs(x)` | 返回绝对值 | `abs(-5)` → `5` |
+| `sum(iterable)` | 求和（内部放可迭代对象） | `sum([1, 2, 3])` → `6` |
+| `min(x, key=...)` | 最小值，可按 key 转换后比较 | `min(5, -8, key=abs)` → `5` |
+| `max(x, key=...)` | 最大值，同上 | `max(5, -8, key=abs)` → `-8` |
+| `zip(a, b)` | 并行打包成元组 | `zip([1,2],['a','b'])` |
+| `dir(module)` | 查看模块所有属性 | `dir(__builtins__)` |
 
 ## 18. 类型转换
 
@@ -1968,7 +2063,7 @@ backup = copy.deepcopy(matrix)   # 嵌套 → 深拷贝
 | `enumerate(x)` | 带索引遍历 |
 | `zip(a, b)` | 并行迭代 |
 | `sorted(x, key=..., reverse=...)` | 按 key 返回值排序，reverse=True 降序 |
-| `max(x)`, `min(x)`, `sum(x)` | 最大/最小/求和 |
+| `max(x,key=...)`, `min(x,key=...)`, `sum(x)` | 最大/最小（支持 key 参数）/ 求和 |
 | `abs(x)` | 绝对值 |
 | `round(x, n)` | 四舍五入到 n 位 |
 | `isinstance(x, type)` | 类型检查 |
@@ -2055,12 +2150,3 @@ data = [("Alice", 85), ("Bob", 92)]
 sorted(data, key=lambda x: x[1], reverse=True)  # 按成绩从高到低
 sorted(data, key=lambda x: len(x[0]))            # 按姓名长度
 ```
-
-lambda结合if判断
-print("a比b小") if a<b else print("a大于等于b")
-comp = lambda a,b:"a比b小" if a<b else "a大于等于b" #a/b是形参，比较大小
-print(comp(8,5))
-特点
-lambda只能实现简单的逻辑，如果逻辑复杂且代码量较大，不建议使用lambda，降低代码的可读性，为后期的代码维护增加困难
-
-内置函数
