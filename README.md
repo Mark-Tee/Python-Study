@@ -797,6 +797,62 @@ print(s.replace("World", "Python"))  # → Hello, Python!
 
 > 💡 **切片口诀**：`[起点:终点:步长]`，左闭右开，省略起点默认 0，省略终点默认末尾。
 
+### 文件读写
+
+> `open()` 打开文件，`with` 自动关闭。`"r"` 读，`"w"` 写，`encoding="utf-8"` 防乱码。
+
+**读文件的固定模板：**
+
+```python
+with open("data.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()      # 去掉 \n，必做！
+        if not line:             # 跳过空行
+            continue
+        # 处理 line...
+```
+
+**写文件的固定模板：**
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("内容\n")            # 手动加 \n
+```
+
+**读 → 处理 → 写 完整流水线：**
+
+```python
+# 1. 读
+students = []
+with open("scores.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        name, score = line.split(",")          # "张三,85" → name="张三", score="85"
+        students.append((name, int(score)))    # 字符串转整数
+
+# 2. 处理
+total = len(students)
+score_sum = sum(x[1] for x in students)        # 提取第二列求和
+top_name, top_score = max(students, key=lambda x: x[1])
+
+# 3. 写
+with open("result.txt", "w", encoding="utf-8") as f:
+    f.write("=== 报告 ===\n")
+    f.write(f"总人数: {total}\n")
+    f.write(f"总分: {score_sum}\n")
+    f.write(f"最高分: {top_name} ({top_score}分)\n")
+```
+
+| 模式 | 写法 | 场景 |
+|------|------|------|
+| 提取元组第 N 列 | `[x[N] for x in list]` | 总分、平均分 |
+| 最大值 + 字段 | `max(list, key=lambda x: x[N])` | 最高分、最低分 |
+| 条件计数 | `len([x for x in list if 条件])` | 及格人数 |
+| 逐行拆开 | `a, b = line.split(",")` | CSV 解析 |
+| 字符串转整数 | `int("85")` → `85` | 读入数值数据 |
+
 ---
 
 ## 12. 字符串方法
