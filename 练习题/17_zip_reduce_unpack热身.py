@@ -25,8 +25,10 @@ print(nameage)
 
 nums = (10, 20, 30, 40, 50)
 # TODO: 拆包后 print(a), print(b)
-
-
+def func(a,*b):
+    print(a)
+    print(b)
+func(nums)
 
 # 应输出：10 和 [20, 30, 40, 50]
 
@@ -35,8 +37,10 @@ nums = (10, 20, 30, 40, 50)
 # 题目三：reduce
 # 用 reduce + lambda 求列表中所有数的乘积。
 # 提示：from functools import reduce
-
+from functools import reduce
 data = [2, 3, 4, 5]
+result = reduce(lambda x,y:x*y,data)
+print(result)
 # TODO: result = ...
 # 计算过程：2×3=6 → 6×4=24 → 24×5=120
 # 结果：120
@@ -49,6 +53,9 @@ data = [2, 3, 4, 5]
 
 heights = [-5, 3, -1, 8, 2]
 # TODO: closest = ...
+ 
+mini = min(heights,key=abs)
+print(mini)
 # 结果：-1（绝对值 1 最小）
 
 
