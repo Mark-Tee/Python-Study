@@ -850,8 +850,22 @@ with open("result.txt", "w", encoding="utf-8") as f:
 | 提取元组第 N 列 | `[x[N] for x in list]` | 总分、平均分 |
 | 最大值 + 字段 | `max(list, key=lambda x: x[N])` | 最高分、最低分 |
 | 条件计数 | `len([x for x in list if 条件])` | 及格人数 |
-| 逐行拆开 | `a, b = line.split(",")` | CSV 解析 |
+| 逐行拆开 | `name, score = line.split(",")` | CSV 解析 |
 | 字符串转整数 | `int("85")` → `85` | 读入数值数据 |
+
+**💡 拆包在文件读写中的应用：**
+
+```python
+# split(",") 返回列表 ["张三", "85"]
+# 拆包：等号左边两个变量直接接收
+name, score = line.split(",")     # name="张三", score="85"
+
+# max 返回元组 ("李四", 92)
+# 拆包：两个变量同时接收
+top_name, top_score = max(students, key=lambda x: x[1])
+```
+
+> `a, b = ...` 的本质是拆包——等号右边是可迭代对象（列表、元组），左边变量数和元素数一一对应。详见 [第 14 节 基本操作](#14-元组) 中的解包。
 
 ---
 
