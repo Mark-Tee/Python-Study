@@ -24,8 +24,9 @@
 16. [集合](#16-集合)
 17. [函数基础](#17-函数基础)
 18. [类型转换](#18-类型转换)
-19. [深浅拷贝与可变/不可变类型](#19-深浅拷贝与可变不可变类型)
-20. [速查表与常见面试题](#20-速查表与常见面试题)
+19. [异常处理](#19-异常处理)
+20. [深浅拷贝与可变/不可变类型](#20-深浅拷贝与可变不可变类型)
+21. [速查表与常见面试题](#21-速查表与常见面试题)
 
 ---
 
@@ -1988,7 +1989,97 @@ safe_result = ast.literal_eval("{'a': 1}")       # {'a': 1}
 
 ---
 
-## 19. 深浅拷贝与可变/不可变类型
+## 19. 异常处理
+
+> 程序运行时发生的错误称为**异常**。`try/except` 可以捕获异常，防止程序崩溃。类型转换是异常最常出现的场景。
+
+### 常见异常类型
+
+| 异常 | 触发场景 | 示例 |
+|------|---------|------|
+| `ValueError` | 类型转换失败 | `int("abc")` |
+| `TypeError` | 类型不匹配 | `len(123)` |
+| `IndexError` | 索引超出范围 | `[1,2][5]` |
+| `KeyError` | 字典键不存在 | `{}["x"]` |
+| `FileNotFoundError` | 文件不存在 | `open("无此文件.txt")` |
+| `ZeroDivisionError` | 除以零 | `1 / 0` |
+| `NameError` | 使用未定义的变量 | `print(x)`（x 未定义） |
+
+### try/except 基本结构
+
+```python
+# 捕获特定异常
+try:
+    age = int(input("年龄: "))
+    print(f"明年你 {age + 1} 岁")
+except ValueError:
+    print("请输入有效的数字！")
+
+# 捕获多种异常
+try:
+    num = int(input("数字: "))
+    print(100 / num)
+except ValueError:
+    print("不是数字")
+except ZeroDivisionError:
+    print("不能除以 0")
+
+# 捕获所有异常（慎用，会隐藏未知错误）
+try:
+    risky_code()
+except Exception as e:
+    print(f"出错了：{e}")
+```
+
+### try/except/else/finally 完整结构
+
+```python
+try:
+    f = open("data.txt", "r")
+    content = f.read()
+except FileNotFoundError:
+    print("文件不存在")
+else:
+    print("读取成功")            # 无异常时执行
+finally:
+    f.close()                    # 无论是否异常都执行
+    print("文件已关闭")
+```
+
+> 💡 `finally` 常用于释放资源（关闭文件、断开连接），保证一定会执行。
+
+| 块 | 何时执行 |
+|----|---------|
+| `try` | 尝试执行，可能出错的代码 |
+| `except` | 捕获到指定异常时 |
+| `else` | 没有发生任何异常时（optional） |
+| `finally` | 不管有没有异常都会执行（optional） |
+
+### 常见应用场景
+
+```python
+# 1. 输入校验
+while True:
+    try:
+        age = int(input("年龄: "))
+        break                      # 输入正确，跳出循环
+    except ValueError:
+        print("请输入整数！")
+
+# 2. 安全读取文件（用 with 更简洁）
+try:
+    with open("data.txt", "r", encoding="utf-8") as f:
+        data = f.read()
+except FileNotFoundError:
+    data = None
+    print("文件不存在，使用默认数据")
+```
+
+> 💡 **原则**：只捕获你**知道怎么处理**的异常。不要用 `try/except` 掩盖所有错误——`except Exception` 会吞掉 bug，调试时找都找不到。
+
+---
+
+## 20. 深浅拷贝与可变/不可变类型
 
 ### 可变类型 (Mutable) vs 不可变类型 (Immutable)
 
@@ -2146,7 +2237,7 @@ backup = copy.deepcopy(matrix)   # 嵌套 → 深拷贝
 
 ---
 
-## 20. 速查表与常见面试题
+## 21. 速查表与常见面试题
 
 ### 数据类型速查
 
@@ -2195,7 +2286,7 @@ print(a is b)   # True  （同一对象）
 ```
 
 **3. 深拷贝 vs 浅拷贝？**
-> 详见 [第 19 节](#19-深浅拷贝与可变不可变类型)。简单来说：浅拷贝只复制第一层（内层仍共享），深拷贝递归复制所有层（完全独立）。赋值 `=` 则不复制，直接共享同一对象。
+> 详见 [第 20 节](#20-深浅拷贝与可变不可变类型)。简单来说：浅拷贝只复制第一层（内层仍共享），深拷贝递归复制所有层（完全独立）。赋值 `=` 则不复制，直接共享同一对象。
 
 **4. `*args` 和 `**kwargs` 的区别？**
 > `*args` 接收位置参数为**元组**；`**kwargs` 接收关键字参数为**字典**。
