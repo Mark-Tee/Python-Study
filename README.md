@@ -455,6 +455,17 @@ else:
 
 > 💡 链式比较：`1 < x < 10` 等价于 `x > 1 and x < 10`
 
+```python
+# is：判断两个变量是否指向同一个对象（内存地址）
+a = [1, 2]
+b = [1, 2]
+print(a == b)   # True  （值相同）
+print(a is b)   # False （不同对象）
+
+c = a           # c 和 a 指向同一对象
+print(a is c)   # True
+```
+
 ### 逻辑运算符
 
 | 运算符 | 说明 | 短路行为 |
@@ -576,7 +587,7 @@ while count < 5:
 # → 0 1 2 3 4
 ```
 
-> ⚠️ **避免死循环**：确保循环条件最终会变为 `False`。
+> ⚠️ **避免死循环**：确保循环条件最终会变为 `False`。`break` 和 `continue` 在 while 中同样适用（详见 [第 10 节](#10-for-循环)）。
 
 ### while-else
 
@@ -1038,7 +1049,14 @@ nums.sort(reverse=True)    # 原地降序 → [9, 5, 4, 3, 1, 1]
 # sorted() 返回新列表，原列表不变
 sorted_nums = sorted(nums)
 sorted_desc = sorted(nums, reverse=True)
+
+# key 参数：按指定规则排序（和 lambda 搭配）
+words = ["banana", "apple", "Cherry"]
+words.sort(key=str.lower)              # 忽略大小写排序
+words.sort(key=len)                    # 按长度排序
 ```
+
+> 💡 `sort()` 和 `sorted()` 也支持 `key=` 参数，用法和 `sorted(students, key=lambda x: x[1])` 完全相同。详见 [第 17 节 lambda 部分](#17-函数基础)。
 
 ### 列表推导式 ⭐
 
@@ -1404,7 +1422,13 @@ if "target" in large_set:   # O(1) vs 列表 O(n)
 
 # 3. 找共同元素
 common = set(list1) & set(list2)
+
+# 4. frozenset：不可变集合（可作字典键、可放入其他集合）
+frozen = frozenset([1, 2, 3])
+# frozen.add(4)  ← 报错 AttributeError，不可修改
 ```
+
+> ⚠️ 空集合必须用 `set()` 而不是 `{}`（`{}` 是空字典）。集合元素必须是可哈希（不可变）类型。
 
 ---
 
@@ -1448,6 +1472,12 @@ def func(*args, **kwargs):
 
 func(1, 2, 3, name="Alice", age=30)
 # args: (1, 2, 3)
+# kwargs: {'name': 'Alice', 'age': 30}
+
+# 调用时用 ** 展开字典为关键字参数
+params = {"name": "Alice", "age": 30}
+func(1, 2, **params)
+# args: (1, 2)
 # kwargs: {'name': 'Alice', 'age': 30}
 ```
 
@@ -2039,7 +2069,7 @@ print(a is b)   # False（不同对象了）
 > 创建新对象，拷贝第一层数据，**嵌套层仍指向原地址**。就像只换了外壳，里面的东西还是原来的。
 
 ```python
-import copy
+import copy                    # 使用前先导入 copy 模块
 
 original = [[1, 2], [3, 4]]
 shallow = copy.copy(original)   # 浅拷贝
