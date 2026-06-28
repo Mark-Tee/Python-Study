@@ -27,6 +27,10 @@
 19. [异常处理](#19-异常处理)
 20. [深浅拷贝与可变/不可变类型](#20-深浅拷贝与可变不可变类型)
 21. [速查表与常见面试题](#21-速查表与常见面试题)
+22. [pip 与虚拟环境](#22-pip-与虚拟环境)
+23. [正则表达式](#23-正则表达式)
+24. [JSON 与 CSV](#24-json-与-csv)
+25. [datetime 时间处理](#25-datetime-时间处理)
 
 ---
 
@@ -2349,3 +2353,392 @@ data = [("Alice", 85), ("Bob", 92)]
 sorted(data, key=lambda x: x[1], reverse=True)  # 按成绩从高到低
 sorted(data, key=lambda x: len(x[0]))            # 按姓名长度
 ```
+
+---
+
+## 22. pip 与虚拟环境
+
+> pip 是 Python 的**包管理工具**，用来安装第三方库。虚拟环境让每个项目有独立的 Python 环境，互不干扰。
+
+### pip 基本命令
+
+```bash
+# 在终端（cmd/PowerShell/终端）执行，不是在 Python 里
+
+pip install 包名           # 安装一个包
+pip install 包名==版本     # 安装指定版本
+pip uninstall 包名         # 卸载
+pip list                   # 查看已安装的所有包
+pip show 包名              # 查看某个包的详细信息
+pip freeze > requirements.txt   # 导出依赖列表
+pip install -r requirements.txt # 从列表批量安装
+```
+
+### 虚拟环境 venv
+
+> 虚拟环境就是一个**独立的 Python 副本**，里面装的包不影响系统和其他项目。
+
+**创建和使用（Windows 终端）：**
+
+```bash
+# 1. 创建虚拟环境（在项目文件夹下）
+python -m venv myenv
+
+# 2. 激活（进入）
+myenv\Scripts\activate
+# 终端前面出现 (myenv) 表示激活成功 →
+
+# 3. 在激活状态装包
+pip install netmiko
+# netmiko 只装在这个环境里，外面不受影响
+
+# 4. 退出
+deactivate
+```
+
+**为什么需要虚拟环境？**
+
+```
+无虚拟环境：
+  项目A 需要 netmiko 3.0  →  冲突！版本打架
+  项目B 需要 netmiko 4.0  →
+
+有虚拟环境：
+  venv_A/  →  netmiko 3.0   ✓ 互相独立
+  venv_B/  →  netmiko 4.0   ✓
+```
+
+### 实战：从头搭建一个项目的完整流程
+
+```bash
+# 1. 创建项目文件夹
+mkdir my-net-tools
+cd my-net-tools
+
+# 2. 创建+激活虚拟环境
+python -m venv venv
+venv\Scripts\activate
+
+# 3. 装需要的包
+pip install netmiko pandas
+
+# 4. 写代码（your_script.py）
+# ...
+
+# 5. 导出依赖（方便别人复现你的环境）
+pip freeze > requirements.txt
+
+# 6. 别人拿到项目后，一行命令复现
+pip install -r requirements.txt
+```
+
+> ⚠️ `requirements.txt` 只记录**第三方包**，不包含 Python 标准库（re、json、datetime 等）。
+
+---
+
+## 23. 正则表达式
+
+> 正则表达式（regex）是一种**模式匹配语言**，用来从文本中精准提取、替换、验证信息。`re` 是 Python 内置模块。
+
+### 快速理解
+
+```python
+import re
+
+text = "设备序列号: CAT1234K9AB，软件版本: 17.3.5"
+
+# 找"字母+数字"的序列号
+result = re.search(r"[A-Z]+\d+[A-Z]+\d+", text)
+print(result.group())   # CAT1234K9AB
+```
+
+不用正则 = 手写一堆 `find()`、`split()`、`if` 判断。用正则 = 写一个模式，自动匹配。
+
+### 常用模式符号
+
+| 符号 | 含义 | 示例 | 匹配什么 |
+|------|------|------|---------|
+| `\d` | 数字 | `\d+` | `123` |
+| `\w` | 字母/数字/下划线 | `\w+` | `VLAN10` |
+| `\s` | 空白字符（空格、Tab、换行） | `\s+` | 任意空白 |
+| `.` | 任意字符（除换行） | `.*` | 任意内容 |
+| `+` | 1 个或更多 | `\d+` | `1`, `123`, `99999` |
+| `*` | 0 个或更多 | `\d*` | 空、`1`, `123` |
+| `?` | 0 个或 1 个 | `colou?r` | `color`, `colour` |
+| `[abc]` | a、b、c 中任一个 | `[ABC]\d+` | `A12`, `B3` |
+| `[a-z]` | a 到 z 中任一个 | `[a-z]+` | 小写字母串 |
+| `^` | 行首 | `^Error` | 以 Error 开头的行 |
+| `$` | 行尾 | `done$` | 以 done 结尾的行 |
+| `()` | 分组捕获 | `(\d+)\.(\d+)` | 分别捕获 `17` 和 `3` |
+| `|` | 或 | `up|down` | `up` 或 `down` |
+
+### re 常用函数
+
+```python
+import re
+
+text = "接口 Gi0/1 状态 up，接口 Gi0/2 状态 down"
+
+# search：找到第一个匹配，返回 match 对象
+m = re.search(r"Gi\S+", text)
+print(m.group())   # Gi0/1
+
+# findall：找到所有匹配，返回列表（最常用）
+interfaces = re.findall(r"Gi\S+", text)
+print(interfaces)  # ['Gi0/1', 'Gi0/2']
+
+# sub：替换所有匹配
+new_text = re.sub(r"down", "**异常**", text)
+print(new_text)    # 接口 Gi0/1 状态 up，接口 Gi0/2 状态 **异常**
+
+# split：按模式拆分
+parts = re.split(r"\s*,\s*", "VLAN10, VLAN20, VLAN30")
+print(parts)       # ['VLAN10', 'VLAN20', 'VLAN30']
+```
+
+### 分组捕获 — 从 show 输出中提取键值
+
+```python
+import re
+
+show_ver = """
+Cisco IOS Software, Version 17.3.5
+System image file is "flash:packages.conf"
+Processor board ID CAT1234K9AB
+"""
+
+# 用 () 分组，同时捕获版本号和序列号
+version = re.search(r"Version (\d+\.\d+\.\d+)", show_ver)
+serial  = re.search(r"board ID (\S+)", show_ver)
+
+print(version.group(1))  # 17.3.5
+print(serial.group(1))   # CAT1234K9AB
+```
+
+### 网工实战场景
+
+```python
+# 1. 从 show ip interface brief 提取所有 IP
+output = """
+Gi0/0    10.0.0.1    YES manual up   up
+Gi0/1    10.0.1.1    YES manual up   down
+"""
+ips = re.findall(r"\d+\.\d+\.\d+\.\d+", output)
+print(ips)  # ['10.0.0.1', '10.0.1.1']
+
+# 2. 检查接口状态
+down_count = len(re.findall(r"down$", output, re.MULTILINE))
+print(f"{down_count} 个接口 down")
+
+# 3. 验证 IP 地址格式是否合法
+def is_valid_ip(ip):
+    pattern = r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$"
+    return bool(re.match(pattern, ip))
+
+print(is_valid_ip("192.168.1.1"))   # True
+print(is_valid_ip("256.1.1.1"))     # False（实际应校验范围，这里是示例）
+```
+
+> ⚠️ 正则贪婪匹配：`.*` 会尽可能多匹配。加 `?` 变非贪婪：`.*?` 尽可能少匹配。
+
+---
+
+## 24. JSON 与 CSV
+
+> JSON 和 CSV 是两种最常见的**数据交换格式**。JSON 用键值对存结构化数据，CSV 用表格存行列数据。
+
+### JSON — JavaScript Object Notation
+
+```python
+import json
+
+# Python 字典 ⇄ JSON 字符串
+data = {"hostname": "core-sw", "ip": "10.0.0.1", "vlans": [10, 20, 30]}
+
+# 写入 JSON 文件
+with open("devices.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+    # indent=2 → 缩进美观；ensure_ascii=False → 保留中文
+
+# 从 JSON 文件读取
+with open("devices.json", "r", encoding="utf-8") as f:
+    loaded = json.load(f)
+print(loaded["hostname"])   # core-sw
+```
+
+```python
+# 字典 ↔ JSON 字符串（不写文件）
+json_str = json.dumps(data, indent=2)   # 字典 → JSON 字符串
+data = json.loads(json_str)             # JSON 字符串 → 字典
+```
+
+### JSON 网工场景
+
+```python
+# 设备清单 inventory.json
+"""
+[
+    {"hostname": "core-01",  "ip": "10.0.0.1",  "type": "cisco_ios"},
+    {"hostname": "edge-01",  "ip": "10.0.0.2",  "type": "cisco_ios"},
+    {"hostname": "fw-01",    "ip": "10.0.0.3",  "type": "fortinet"}
+]
+"""
+
+import json
+
+# 读取设备清单
+with open("inventory.json", "r", encoding="utf-8") as f:
+    devices = json.load(f)
+
+# 筛选思科设备
+cisco_devices = [d for d in devices if d["type"] == "cisco_ios"]
+print(f"思科设备: {len(cisco_devices)} 台")
+
+# 新增设备并写回
+devices.append({"hostname": "core-02", "ip": "10.0.0.4", "type": "cisco_ios"})
+with open("inventory.json", "w", encoding="utf-8") as f:
+    json.dump(devices, f, indent=2, ensure_ascii=False)
+```
+
+### CSV — Comma-Separated Values
+
+```python
+import csv
+
+# 写入 CSV
+with open("ports.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["设备", "接口", "状态"])     # 表头
+    writer.writerow(["core-01", "Gi0/1", "up"])
+    writer.writerow(["core-01", "Gi0/2", "down"])
+
+# 读取 CSV
+with open("ports.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    header = next(reader)              # 跳过表头
+    for row in reader:
+        device, port, status = row     # 拆包
+        if status == "down":
+            print(f"⚠️ {device} {port} 异常！")
+```
+
+### CSV 网工场景 — 巡检报表
+
+```python
+# 生成巡检报告 CSV
+import csv
+from datetime import datetime
+
+devices = [
+    {"hostname": "core-01", "ip": "10.0.0.1", "status": "在线", "cpu": 45},
+    {"hostname": "edge-01", "ip": "10.0.0.2", "status": "在线", "cpu": 62},
+    {"hostname": "fw-01",   "ip": "10.0.0.3", "status": "离线", "cpu": 0},
+]
+
+filename = f"巡检报告_{datetime.now().strftime('%Y%m%d')}.csv"
+with open(filename, "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["设备名", "IP", "状态", "CPU使用率%"])
+    for d in devices:
+        writer.writerow([d["hostname"], d["ip"], d["status"], d["cpu"]])
+
+print(f"已生成 {filename}")
+```
+
+### JSON vs CSV
+
+| | JSON | CSV |
+|---|------|-----|
+| **格式** | `{"key": "value"}` | 表格行列 |
+| **适合** | 嵌套数据（设备配置）、API 交互 | 表格数据（巡检报表）、Excel 打开 |
+| **文件** | `.json` | `.csv` |
+| **写** | `json.dump()` | `csv.writer()` |
+| **读** | `json.load()` | `csv.reader()` |
+
+---
+
+## 25. datetime 时间处理
+
+> `datetime` 是 Python 内置模块，处理日期、时间、时间差、时间戳。
+
+### 获取当前时间
+
+```python
+from datetime import datetime
+
+now = datetime.now()
+print(now)                     # 2026-06-28 15:30:45.123456
+print(now.year, now.month, now.day)   # 2026 6 28
+print(now.hour, now.minute, now.second)  # 15 30 45
+```
+
+### 格式化输出
+
+```python
+from datetime import datetime
+
+now = datetime.now()
+
+# strftime：日期时间 → 字符串（自定义格式）
+print(now.strftime("%Y-%m-%d"))           # 2026-06-28
+print(now.strftime("%Y-%m-%d %H:%M:%S"))  # 2026-06-28 15:30:45
+print(now.strftime("%Y%m%d_%H%M%S"))      # 20260628_153045 → 文件名常用
+
+# strptime：字符串 → 日期时间（解析）
+log_time = "Jun 28 15:30:45"
+t = datetime.strptime(log_time, "%b %d %H:%M:%S")
+print(t)  # 2026-06-28 15:30:45
+```
+
+| 代码 | 含义 | 示例 |
+|------|------|------|
+| `%Y` | 四位年 | `2026` |
+| `%m` | 两位月 | `06` |
+| `%d` | 两位日 | `28` |
+| `%H` | 24小时制 | `15` |
+| `%M` | 分钟 | `30` |
+| `%S` | 秒 | `45` |
+| `%b` | 英文月缩写 | `Jun` |
+
+### 时间差 timedelta
+
+```python
+from datetime import datetime, timedelta
+
+now = datetime.now()
+
+# 七天前是几号？
+week_ago = now - timedelta(days=7)
+
+# 三天后
+future = now + timedelta(days=3)
+
+# 两小时后
+later = now + timedelta(hours=2)
+
+# 两个日期差几天？
+d1 = datetime(2026, 6, 1)
+d2 = datetime(2026, 6, 28)
+print((d2 - d1).days)   # 27
+```
+
+### 网工实战场景
+
+```python
+from datetime import datetime, timedelta
+
+# 1. 巡检日志文件名加时间戳
+filename = f"巡检报告_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+# → 巡检报告_20260628_153045.txt
+
+# 2. 判断设备日志是否过期（超过 30 天的标记为过期）
+log_date = datetime.strptime("2026-05-20", "%Y-%m-%d")
+if (datetime.now() - log_date).days > 30:
+    print("⚠️ 日志已过期，请重新巡检")
+
+# 3. 计算下次巡检时间
+next_check = datetime.now() + timedelta(days=7)
+print(f"下次巡检时间：{next_check.strftime('%Y-%m-%d %H:%M')}")
+```
+
+> 💡 `strftime` = **str**ing **f**ormat **time**（把时间格式化成字符串）；`strptime` = **str**ing **p**arse **time**（从字符串解析时间）。记忆技巧：f 是 format 输出，p 是 parse 输入。
