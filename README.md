@@ -850,7 +850,7 @@ with open("result.txt", "w", encoding="utf-8") as f:
 | 提取元组第 N 列 | `[x[N] for x in list]` | 总分、平均分 |
 | 最大值 + 字段 | `max(list, key=lambda x: x[N])` | 最高分、最低分 |
 | 条件计数 | `len([x for x in list if 条件])` | 及格人数 |
-| 逐行拆开 | `a, b = line.split(",")` | CSV 解析 |
+| 逐行拆开 | `name, score = line.split(",")` | CSV 解析（[拆包](#14-元组)） |
 | 字符串转整数 | `int("85")` → `85` | 读入数值数据 |
 
 ---
@@ -1123,9 +1123,13 @@ print(t1 * 3)        # (1, 2, 1, 2, 1, 2)
 
 # 成员检查
 print(2 in t1)       # True
+```
 
-# 解包 (unpacking) — 去掉容器，直接获取里面的值
+### 解包 (Unpacking)
 
+> 拆包就是**去掉容器，直接获取里面的值**。元组、列表、函数返回值都能拆。
+
+```python
 # 方式一：一一对应（变量数和元素数必须相等）
 x, y = (3, 4)               # x=3, y=4
 a, b, c, d = (1, 2, 3, 4)   # ❌ 变量和元组个数不一致 → ValueError
@@ -1148,6 +1152,34 @@ func(*arg)                   # * 展开元组，等价于 func(1, 2, 3, 4, 5)
 ```
 
 > 💡 **两种 * 的区别**：定义时 `def f(*args)` 是**打包**——多余参数收进元组；调用时 `f(*tup)` 是**拆包**——把元组展开成独立参数。
+
+**拆包的常见应用场景：**
+
+```python
+# 1. 函数返回多个值 → 拆包接收
+def get_min_max(nums):
+    return min(nums), max(nums)
+mn, mx = get_min_max([3, 1, 4, 1, 5])   # mn=1, mx=5
+
+# 2. max/min 返回元组 → 拆包取字段
+top_name, top_score = max(scores, key=lambda x: x[1])
+
+# 3. split(",") 返回列表 → 拆包取值
+name, score = "张三,85".split(",")       # name="张三", score="85"
+
+# 4. 遍历字典 → 键值拆包
+for key, value in {"a": 1, "b": 2}.items():
+    print(key, value)
+```
+
+| 场景 | 写法 | 拆前 | 拆后 |
+|------|------|------|------|
+| 元组 | `a, b = tup` | `(1, 2)` | `a=1, b=2` |
+| 星号收尾 | `a, *b = tup` | `(1, 2, 3, 4)` | `a=1, b=[2,3,4]` |
+| 展开调用 | `func(*tup)` | `(1, 2, 3)` | `func(1, 2, 3)` |
+| 函数返回 | `a, b = func()` | `return 1, 2` | `a=1, b=2` |
+| split | `a, b = s.split(",")` | `["张三","85"]` | `a="张三", b="85"` |
+| 遍历字典 | `for k, v in d.items()` | `("a",1)` | `k="a", v=1` |
 
 ### 元组 vs 列表
 
